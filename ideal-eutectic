@@ -1,0 +1,49 @@
+#!/usr/bin/perl
+&setup;$file_count=@ARGV;$terminate=1 if $file_count<2;$file_count--;
+foreach $file(@ARGV){
+        if (-e $file){
+                push @mols,$file;
+                $head=`head -1 $file`;
+                ($temperature,$enthalpyfus)=grep length, split(/\s+/,$head);
+                #print "$file $temp $enthfus\n";
+                push @temps,$temperature;push @enthalpies,$enthalpyfus;
+        }else{
+                $terminate++; warn "cannot find file: $file";
+        };
+};
+die "expecting input of form:\n./exe [molecule 1] [molecule 2] [opt more molecules (as many as desired)]" unless ($terminate==0);
+foreach $index (0..$file_count-1){ @concs[$index]=1/($file_count+1); };
+while($diff>$tol){
+        print "iteration: $iter\n" if $debug==1;
+        $index=0;$eutectic_est=1/(1/@temps[$index]-$gas_const*log(@concs[$index])/@enthalpies[$index]);
+        print "$iter eutectic est $index @concs[$index] $eutectic_est\n" if $debug==1;
+        $aoo=0;
+        foreach $index(1..$file_count){
+                @concs[$index]=exp(-@enthalpies[$index]/$gas_const*(1/$eutectic_est-1/@temps[$index]));
+                $aoo+=@concs[$index]; #add up the other mole fractions
+                print "$index mol frac: @concs[$index] sum: $aoo\n" if $debug==1;
+        };
+        $aoo=1-$aoo; #subtract from 1 to get new estimate for molecule 1 mole fract
+        $foo=(@concs[0]+$aoo)/2; #average
+        print "the new est. mol. fract. for @mols[0] is $foo from $aoo\n" if $debug==1;
+        $diff=abs($foo-$aoo)/($foo)*100;
+        print "$iter gen diff $diff\n" if $debug==1;
+        $index=0;@concs[$index]=$foo;
+        $iter++;
+        die "maximum iterations reached: $max_iter\n" if $iter>$max_iter;
+};
+print "********\neutectic summary: $eutectic_est K\n";
+foreach $index (0..$file_count){
+        print "@mols[$index] mole fraction: @concs[$index]\n";
+};
+print "convergence tolerance in mole fraction: $tol
+required $iter iterations to converge within $diff\n********\n";
+sub setup {
+        $debug=0;
+        $terminate=0;
+        $gas_const=0.0083144598; #kJ/mol/K
+        $tol=0.00001;
+        $diff=100;
+        $iter=0;
+        $max_iter=500;
+};
