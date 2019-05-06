@@ -6,12 +6,12 @@ The molecules cannot have spaces and must corresond to files (with path) that co
 For molecule files: 
 $ more methane
 90.7 0.94
-# melt_T(K) enth_fus(kJ/mol)
+melt_T(K) enth_fus(kJ/mol)
 methane
 https://en.wikipedia.org/wiki/Alkane#Melting_points
 $ more ethane
 90. 2.85
-# melt_T(K) enth_fus(kJ/mol)
+melt_T(K) enth_fus(kJ/mol)
 ethane
 https://en.wikipedia.org/wiki/Alkane#Melting_points
 Then this is the result: 
