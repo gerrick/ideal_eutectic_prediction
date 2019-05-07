@@ -1,8 +1,8 @@
 # ideal_eutectic_prediction
 May 6 2019  
-This perl exe will predict the eutectic temperature and compositions of a mixture of 2 or more molecules using the ideal approximation. It is executed with the format:
-./exe [molecule 1] [molecule 2] [... more molecules]
-The molecules cannot have spaces and must corresond to files (with path) that contain the melting temperature in Kelvin and enthalpy of fusion on this first line. Subsequent lines are not read, so they can contain other information as needed (for example, data references, etc).  
+This perl exe will predict the eutectic temperature and compositions of a mixture of 2 or more molecules using the ideal approximation. It is executed with the format:  
+./exe [molecule 1] [molecule 2] [... more molecules]  
+The molecule names cannot have spaces and must corresond to files (with path) that contain the melting temperature in Kelvin and enthalpy of fusion on this first line. Subsequent lines are not read, so they can contain other information as needed (for example, data references, etc).  
 For molecule files:  
 $ more methane  
 90.7 0.94  
