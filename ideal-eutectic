@@ -5,13 +5,15 @@ foreach $file(@ARGV){
                 push @mols,$file;
                 $head=`head -1 $file`;
                 ($temperature,$enthalpyfus)=grep length, split(/\s+/,$head);
+                $terminate++ if $temperature<0; #melt temp must be in K, so positive
+                $terminate++ if $enthalpyfus<0; #enthalpy of fusion is positive for everything but helium... 
                 #print "$file $temp $enthfus\n";
                 push @temps,$temperature;push @enthalpies,$enthalpyfus;
         }else{
                 $terminate++; warn "cannot find file: $file";
         };
 };
-die "expecting input of form:\n./exe [molecule 1] [molecule 2] [opt more molecules (as many as desired)]" unless ($terminate==0);
+die "expecting input of form:\n./exe [molecule 1] [molecule 2] [opt more molecules (as many as desired)]\nnote that T_melt and dH_fusion are expected to be positive" unless ($terminate==0);
 foreach $index (0..$file_count-1){ @concs[$index]=1/($file_count+1); };
 while($diff>$tol){
         print "iteration: $iter\n" if $debug==1;
